@@ -1,49 +1,93 @@
 import * as THREE from 'three';
+import type { BurgerPartData } from './TopBun'; // This will be a circular dependency if type is in same file.
+                                                // Let's assume BurgerPartData is defined elsewhere or we inline it.
+                                                // For this example, I'll assume it's imported correctly.
 
-export interface BurgerPartData {
-  name: string;
-  createMesh: () => THREE.Group;
-  originalY: number;
-  explodedY: number;
-  rotationSpeed: number;
-}
+// If BurgerPartData is only in this file, it should be:
+// export interface BurgerPartData {
+//   name: string;
+//   createMesh: () => THREE.Group;
+//   originalY: number;
+//   explodedY: number;
+//   rotationSpeed: number;
+// }
+
+const BUN_RADIUS = 1.5;
+const TOP_BUN_HEIGHT = 0.7; // Tunable height for the top bun dome
+const LATHE_SEGMENTS = 32; // For smoother bun surface
 
 export const TopBun: BurgerPartData = {
   name: "Top Bun",
   createMesh: () => {
     const topBunGroup = new THREE.Group();
-    const topBunGeometry = new THREE.SphereGeometry(1.5, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.4);
+
+    // Define the 2D profile for the top bun (points in XY plane, to be rotated around Y axis)
+    // Starts from the center of the flat base, goes to the edge, then curves up to the apex.
+    const topBunPoints = [
+      new THREE.Vector2(0, 0), // Center of base
+      new THREE.Vector2(BUN_RADIUS * 0.99, 0.01), // Edge of flat base, small y to ensure it's part of the lathe
+      new THREE.Vector2(BUN_RADIUS, TOP_BUN_HEIGHT * 0.15),
+      new THREE.Vector2(BUN_RADIUS * 0.9, TOP_BUN_HEIGHT * 0.6),
+      new THREE.Vector2(BUN_RADIUS * 0.65, TOP_BUN_HEIGHT * 0.9),
+      new THREE.Vector2(BUN_RADIUS * 0.35, TOP_BUN_HEIGHT * 0.98),
+      new THREE.Vector2(0, TOP_BUN_HEIGHT) // Apex of the dome
+    ];
+
+    const topBunGeometry = new THREE.LatheGeometry(topBunPoints, LATHE_SEGMENTS);
     const topBunMaterial = new THREE.MeshPhongMaterial({
       color: 0x8B4513,  // Saddle brown
       shininess: 25,
       specular: 0x111111
     });
-    const topBun = new THREE.Mesh(topBunGeometry, topBunMaterial);
-    topBun.scale.y = 0.5; // Flatten
-    topBun.castShadow = true;
-    topBun.receiveShadow = true;
-    topBunGroup.add(topBun);
+    const topBunMesh = new THREE.Mesh(topBunGeometry, topBunMaterial);
+    topBunMesh.castShadow = true;
+    topBunMesh.receiveShadow = true;
+    topBunGroup.add(topBunMesh);
 
     // Add sesame seeds
-    const seedCount = 40;
-    const seedGeometry = new THREE.SphereGeometry(0.04, 6, 4);
+    const seedCount = 50; // Increased for better coverage
+    const seedGeometry = new THREE.SphereGeometry(0.035, 5, 3); // Slightly smaller seeds
     const seedMaterial = new THREE.MeshPhongMaterial({
-      color: 0xfff8dc,
-      shininess: 20
+      color: 0xfff8dc, // Creamy white
+      shininess: 15
     });
+
+    // Create a spline from the dome part of the profile for seed placement
+    // Points from edge of base curving to apex
+    const domeProfilePoints = topBunPoints.slice(1); // Exclude (0,0) center base point
+    const domeProfileCurve = new THREE.SplineCurve(domeProfilePoints);
 
     for (let i = 0; i < seedCount; i++) {
       const seed = new THREE.Mesh(seedGeometry, seedMaterial);
-      const phi = Math.random() * Math.PI * 0.35;
-      const theta = Math.random() * Math.PI * 2;
 
-      const r = 1.5;
-      const x = r * Math.sin(phi) * Math.cos(theta);
-      const z = r * Math.sin(phi) * Math.sin(theta);
-      const y = r * Math.cos(phi) * 0.5;
+      // Get a random point along the length of the dome curve
+      // Avoid extreme ends: u from 0.05 (near base edge) to 0.95 (near apex)
+      const u = 0.05 + Math.random() * 0.9;
+      const profilePoint = domeProfileCurve.getPointAt(u);
 
-      seed.position.set(x, y, z);
-      seed.lookAt(x * 2, y * 4, z * 2);
+      const seedRadiusOnBun = profilePoint.x;
+      const seedHeightOnBun = profilePoint.y;
+      const theta = Math.random() * Math.PI * 2; // Random angle around the bun
+
+      seed.position.set(
+        seedRadiusOnBun * Math.cos(theta),
+        seedHeightOnBun,
+        seedRadiusOnBun * Math.sin(theta)
+      );
+      
+      // Orient seeds to somewhat follow the bun's curvature
+      const lookAtPosition = seed.position.clone();
+      if (Math.abs(lookAtPosition.x) < 0.01 && Math.abs(lookAtPosition.z) < 0.01) {
+        // If seed is at the apex, look "up" along Y axis relative to its position
+        lookAtPosition.y += 0.1;
+      } else {
+         // Look slightly "outward" from the Y-axis and "up" along the curve
+        lookAtPosition.x *= 1.2;
+        lookAtPosition.z *= 1.2;
+        lookAtPosition.y += 0.05; // Small upward tilt
+      }
+      seed.lookAt(lookAtPosition);
+
       seed.castShadow = true;
       topBunGroup.add(seed);
     }

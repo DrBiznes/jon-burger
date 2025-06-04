@@ -10,7 +10,7 @@ import { Pickles } from './burger-parts/Pickles';
 import { BottomBun } from './burger-parts/BottomBun';
 
 export interface BurgerComponent extends BurgerPartData {
-  mesh: THREE.Group; // Add the actual THREE.Group object
+  mesh: THREE.Group;
 }
 
 interface ThreeBurgerSetup {
@@ -145,7 +145,7 @@ export function setupThreeScene(mountElement: HTMLDivElement,
         animationFrameId = requestAnimationFrame(animateTransition);
       } else {
         setIsAnimating(false);
-        isExplodedState.current = animationTargetExploded; // Update ref directly
+        isExplodedState.current = animationTargetExploded;
         currentAnimationProgress = null;
         
         // Reset transforms
@@ -165,13 +165,12 @@ export function setupThreeScene(mountElement: HTMLDivElement,
     animationFrameId = requestAnimationFrame(renderLoop);
     time += 0.01;
     
-    // Rotate burger group and individual components only when not animating
-    // FIX: Only rotate if not currently animating an explosion/assembly
+    // Only rotate if not currently animating
     if (currentAnimationProgress === null) {
-        burgerGroup.rotation.y += 0.005;
-        components.forEach(component => {
-            component.mesh.rotation.y += component.rotationSpeed;
-        });
+      burgerGroup.rotation.y += 0.005;
+      components.forEach(component => {
+        component.mesh.rotation.y += component.rotationSpeed;
+      });
     }
     
     // Animate lights
@@ -196,14 +195,14 @@ export function setupThreeScene(mountElement: HTMLDivElement,
     window.removeEventListener('resize', handleResize);
     renderer.dispose();
     mountElement.removeChild(renderer.domElement);
-    // Optional: dispose of geometries and materials if necessary, for complex scenes
+    // Dispose of geometries and materials
     components.forEach(c => {
-        c.mesh.traverse((object: THREE.Object3D) => {
-            if (object instanceof THREE.Mesh) {
-                object.geometry.dispose();
-                (object.material as THREE.Material).dispose();
-            }
-        });
+      c.mesh.traverse((object: THREE.Object3D) => {
+        if (object instanceof THREE.Mesh) {
+          object.geometry.dispose();
+          (object.material as THREE.Material).dispose();
+        }
+      });
     });
     scene.clear();
   };
