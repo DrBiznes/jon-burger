@@ -1,13 +1,14 @@
 import * as THREE from 'three';
-import { BurgerPartData } from './TopBun';
+import type { BurgerPartData } from './TopBun';
 
 export const BottomBun: BurgerPartData = {
   name: "Bottom Bun",
   createMesh: () => {
     const bottomBunGroup = new THREE.Group();
 
-    const topBunMaterial = new THREE.MeshPhongMaterial({ // Reusing material from TopBun
-      color: 0x8B4513,
+    // Reusing material from TopBun - ensure this color matches your original bun color
+    const topBunMaterial = new THREE.MeshPhongMaterial({
+      color: 0x8B4513, // Saddle brown
       shininess: 25,
       specular: 0x111111
     });
@@ -24,7 +25,8 @@ export const BottomBun: BurgerPartData = {
     const bottomGeometry = new THREE.CircleGeometry(1.5, 32);
     const bottomMesh = new THREE.Mesh(bottomGeometry, topBunMaterial);
     bottomMesh.rotation.x = -Math.PI / 2;
-    bottomMesh.position.y = 0;
+    // FIX: Position the circle correctly at the bottom of the flattened sphere
+    bottomMesh.position.y = -0.6; // <- THIS IS THE CRUCIAL CHANGE
     bottomMesh.receiveShadow = true;
     bottomBunGroup.add(bottomMesh);
 

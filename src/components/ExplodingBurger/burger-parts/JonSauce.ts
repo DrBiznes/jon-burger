@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { BurgerPartData } from './TopBun'; // Import the interface
+import type { BurgerPartData } from './TopBun'; // CHANGE: Add 'type'
 
 export const JonSauce: BurgerPartData = {
   name: "Jon Sauce",

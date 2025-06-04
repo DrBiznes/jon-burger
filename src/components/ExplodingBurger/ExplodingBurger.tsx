@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { setupThreeScene, BurgerComponent } from './three-utils';
+import { setupThreeScene, type BurgerComponent } from './three-utils'; // CHANGE: Add 'type'
 import { Button } from '@/components/ui/button'; // Import Shadcn Button
 
 const ExplodingBurger: React.FC = () => {

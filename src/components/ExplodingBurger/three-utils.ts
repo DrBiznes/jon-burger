@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { BurgerPartData, TopBun } from './burger-parts/TopBun'; // Import interface and one part to get path
+import { TopBun, type BurgerPartData } from './burger-parts/TopBun';
 import { JonSauce } from './burger-parts/JonSauce';
 import { Lettuce } from './burger-parts/Lettuce';
 import { RedOnion } from './burger-parts/RedOnion';
@@ -23,7 +23,7 @@ interface ThreeBurgerSetup {
   cleanup: () => void;
 }
 
-export function setupThreeScene(mountElement: HTMLDivElement, 
+export function setupThreeScene(mountElement: HTMLDivElement,
                                  isExplodedState: React.MutableRefObject<boolean>,
                                  setIsAnimating: (value: boolean) => void): ThreeBurgerSetup {
   const scene = new THREE.Scene();
@@ -165,16 +165,13 @@ export function setupThreeScene(mountElement: HTMLDivElement,
     animationFrameId = requestAnimationFrame(renderLoop);
     time += 0.01;
     
-    // Rotate burger only when not animating an explosion/assembly
+    // Rotate burger group and individual components only when not animating
+    // FIX: Only rotate if not currently animating an explosion/assembly
     if (currentAnimationProgress === null) {
         burgerGroup.rotation.y += 0.005;
         components.forEach(component => {
             component.mesh.rotation.y += component.rotationSpeed;
         });
-    } else {
-        // Still allow primary burger group rotation during animation
-        // This makes the wobble feel more natural as the burger still spins
-        burgerGroup.rotation.y += 0.005;
     }
     
     // Animate lights
@@ -204,7 +201,7 @@ export function setupThreeScene(mountElement: HTMLDivElement,
         c.mesh.traverse((object: THREE.Object3D) => {
             if (object instanceof THREE.Mesh) {
                 object.geometry.dispose();
-                (object.material as THREE.Material).dispose(); // Cast to Material
+                (object.material as THREE.Material).dispose();
             }
         });
     });
