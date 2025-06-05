@@ -1,38 +1,31 @@
- import React from 'react';
+import React from 'react';
 import ExplodingBurger from './ExplodingBurger/ExplodingBurger';
-// Example: If you have an SVG starburst icon you can import
-// import StarburstIcon from '@/assets/starburst.svg?react'; // Using Vite's ?react import for SVGs
+
+// Star SVG directly defined as a React component
+const StarBurstIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <polygon points="50,0 61,39 100,39 69,61 79,100 50,75 21,100 31,61 0,39 39,39" fill="currentColor"/>
+  </svg>
+);
 
 const HeroSection: React.FC = () => {
   return (
-    <main className="flex-grow flex flex-col items-center justify-center relative text-center px-4 overflow-hidden">
-      {/* Title with Starburst */}
-      <div className="relative mb-2 md:mb-0"> {/* Adjusted margin for burger overlap */}
-        {/* Placeholder for Starburst - you can replace with an SVG */}
+    <main className="min-h-screen flex flex-col items-center justify-center relative text-center px-4 pt-16 sm:pt-20 md:pt-24 overflow-hidden">
+      <div className="relative mb-4 md:mb-6">
         <div 
           aria-hidden="true" 
-          className="absolute inset-0 flex items-center justify-center z-0 opacity-30"
+          className="absolute inset-0 flex items-center justify-center z-0"
         >
-          <div className="text-yellow-400 w-[200px] h-[200px] md:w-[300px] md:h-[300px] lg:w-[450px] lg:h-[450px]"
-            style={{
-              clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' ,
-              background: 'currentColor'
-            }}
-          />
-          {/* If using an imported SVG component: 
-          <StarburstIcon className="w-[200px] h-[200px] md:w-[300px] md:h-[300px] lg:w-[450px] lg:h-[450px] text-yellow-400 opacity-30" /> 
-          */}
+          <StarBurstIcon className="w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px] text-yellow-400 opacity-40 dark:opacity-30" />
         </div>
-        <h1 className="relative z-10 text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-gray-800 dark:text-white select-none">
+        <h1 className="relative z-10 font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-gray-800 dark:text-white select-none leading-none">
           <span className="block">JON BURGER</span>
-          <span className="block">COMPANY</span>
+          <span className="block mt-[-0.1em] sm:mt-[-0.15em]">COMPANY</span>
         </h1>
       </div>
 
-      {/* Exploding Burger will be positioned via its own internal absolute/fixed positioning */}
       <ExplodingBurger />
-      
-      {/* Ingredient list will be part of ExplodingBurger's overlay */}
+      {/* Ingredient list is part of ExplodingBurger's overlay */}
     </main>
   );
 };
