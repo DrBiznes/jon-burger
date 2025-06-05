@@ -68,27 +68,6 @@ const ExplodingBurger: React.FC = () => {
       />
       
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute bottom-24 sm:bottom-28 left-1/2 -translate-x-1/2 sm:left-8 sm:translate-x-0 bg-black/60 dark:bg-white/20 backdrop-blur-md rounded-lg p-4 max-w-xs sm:max-w-md text-center sm:text-left pointer-events-auto">
-          <p className="text-white dark:text-gray-200 text-lg font-semibold mb-1 font-sans">
-            {isExploded ? '🍔 Scroll Down to Assemble!' : '✨ Scroll Up to Explode!'}
-          </p>
-          <p className="text-gray-300 dark:text-gray-400 text-sm font-sans">
-            Drag the burger to spin and tilt.
-          </p>
-        </div>
-
-        <div className="absolute top-4 right-4">
-          <div className={`px-4 py-2 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-lg font-sans ${
-            isAnimating 
-              ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-purple-500/50' 
-              : isExploded 
-                ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-red-500/50' 
-                : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-green-500/50'
-          }`}>
-            {isAnimating ? '⚡ Animating' : isExploded ? '💥 Exploded' : '🍔 Assembled'}
-          </div>
-        </div>
-
         {isExploded && !isAnimating && (
           <div className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 space-y-1.5 md:space-y-2 pointer-events-auto">
             {burgerComponentsRef.current.map((component) => (

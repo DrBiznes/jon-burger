@@ -37,44 +37,52 @@ export function setupThreeScene(
   scene.background = new THREE.Color(0xffffff);
 
   const camera = new THREE.PerspectiveCamera(50, mountElement.clientWidth / mountElement.clientHeight, 0.1, 1000);
-  camera.position.set(0, 1.5, 11); 
-  camera.lookAt(0, 1, 0);
+  camera.position.set(0, 2, 11);
+  camera.lookAt(0, 0, 0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(mountElement.clientWidth, mountElement.clientHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1; 
+  renderer.toneMappingExposure = 1.2; 
+  renderer.outputEncoding = THREE.sRGBEncoding;
   mountElement.appendChild(renderer.domElement);
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+  // Update the lighting setup
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Reduced intensity
   scene.add(ambientLight);
 
-  const mainLight = new THREE.DirectionalLight(0xffffff, 1.5); 
-  mainLight.position.set(7, 12, 8); 
+  // Main directional light for shadows
+  const mainLight = new THREE.DirectionalLight(0xffffff, 2.0);
+  mainLight.position.set(5, 8, 7);
   mainLight.castShadow = true;
   mainLight.shadow.mapSize.width = 2048;
   mainLight.shadow.mapSize.height = 2048;
-  mainLight.shadow.camera.near = 0.5;
-  mainLight.shadow.camera.far = 35;
-  mainLight.shadow.bias = -0.0005;
-  mainLight.shadow.camera.left = -10;
-  mainLight.shadow.camera.right = 10;
-  mainLight.shadow.camera.top = 10;
-  mainLight.shadow.camera.bottom = -10;
+  mainLight.shadow.camera.near = 0.1;
+  mainLight.shadow.camera.far = 20;
+  mainLight.shadow.bias = -0.001;
+
+  // Adjust shadow camera frustum
+  const shadowSize = 10;
+  mainLight.shadow.camera.left = -shadowSize;
+  mainLight.shadow.camera.right = shadowSize;
+  mainLight.shadow.camera.top = shadowSize;
+  mainLight.shadow.camera.bottom = -shadowSize;
   scene.add(mainLight);
 
-  const rimLight = new THREE.PointLight(0xffcc88, 0.8, 35); 
+  // Rim light for highlighting
+  const rimLight = new THREE.PointLight(0xffcc88, 1.0, 20);
   rimLight.position.set(-7, 4, 5);
   scene.add(rimLight);
 
-  const fillLight = new THREE.PointLight(0xccccff, 0.5, 35); 
+  // Fill light for softer shadows
+  const fillLight = new THREE.PointLight(0xccccff, 0.7, 20);
   fillLight.position.set(5, -2, -7);
   scene.add(fillLight);
 
   const burgerGroup = new THREE.Group();
-  burgerGroup.position.y = 1.0;
+  burgerGroup.position.y = 0; // Changed from 1.0
   burgerGroup.rotation.x = Math.PI / 16; 
   scene.add(burgerGroup);
 
@@ -92,11 +100,15 @@ export function setupThreeScene(
     component.mesh.position.y = isExplodedState.current ? component.explodedY : component.originalY;
   });
 
-  const groundGeometry = new THREE.PlaneGeometry(30, 30);
-  const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.1 }); 
+  // Update the ground plane
+  const groundGeometry = new THREE.PlaneGeometry(50, 50);
+  const groundMaterial = new THREE.ShadowMaterial({ 
+    opacity: 0.2,
+    transparent: true 
+  });
   const ground = new THREE.Mesh(groundGeometry, groundMaterial);
   ground.rotation.x = -Math.PI / 2;
-  ground.position.y = -0.55; 
+  ground.position.y = -2; // Lower the ground plane
   ground.receiveShadow = true;
   scene.add(ground);
 

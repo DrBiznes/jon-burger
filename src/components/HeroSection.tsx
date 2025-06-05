@@ -1,31 +1,43 @@
 import React from 'react';
 import ExplodingBurger from './ExplodingBurger/ExplodingBurger';
-
-// Star SVG directly defined as a React component
-const StarBurstIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <polygon points="50,0 61,39 100,39 69,61 79,100 50,75 21,100 31,61 0,39 39,39" fill="currentColor"/>
-  </svg>
-);
+import Star16 from './stars/s16';
 
 const HeroSection: React.FC = () => {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center relative text-center px-4 pt-16 sm:pt-20 md:pt-24 overflow-hidden">
-      <div className="relative mb-4 md:mb-6">
+    <main className="relative min-h-screen flex flex-col items-center px-4 pt-12 overflow-hidden bg-[#FFFDF7] dark:bg-gray-900">
+      {/* Logo Section - Now with higher z-index */}
+      <div className="relative flex flex-col items-center mt-8 mb-24 z-20">
+        {/* Star background */}
         <div 
           aria-hidden="true" 
-          className="absolute inset-0 flex items-center justify-center z-0"
+          className="absolute inset-0 flex items-center justify-center z-0 scale-125"
         >
-          <StarBurstIcon className="w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px] text-yellow-400 opacity-40 dark:opacity-30" />
+          <Star16 
+            size={450}
+            color="var(--color-chart-1)"
+            className="opacity-40 dark:opacity-30"
+          />
         </div>
-        <h1 className="relative z-10 font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-gray-800 dark:text-white select-none leading-none">
-          <span className="block">JON BURGER</span>
-          <span className="block mt-[-0.1em] sm:mt-[-0.15em]">COMPANY</span>
-        </h1>
+        
+        {/* Text content */}
+        <div className="relative z-10 text-center">
+          <p className="font-['Luckiest_Guy'] text-2xl text-primary mb-4 tracking-wider transform -rotate-3">
+            ALWAYS FRESH
+          </p>
+          <h1 className="font-['Luckiest_Guy'] text-7xl sm:text-8xl md:text-9xl text-primary tracking-wide drop-shadow-md transform rotate-2">
+            <span className="block leading-none hover:scale-105 transition-transform">JON</span>
+            <span className="block leading-none hover:scale-105 transition-transform">BURGER</span>
+            <span className="block leading-tight text-5xl sm:text-6xl md:text-7xl tracking-widest text-chart-1 -rotate-3">
+              COMPANY
+            </span>
+          </h1>
+        </div>
       </div>
 
-      <ExplodingBurger />
-      {/* Ingredient list is part of ExplodingBurger's overlay */}
+      {/* Burger Section - Lower z-index */}
+      <div className="absolute inset-0 z-10">
+        <ExplodingBurger />
+      </div>
     </main>
   );
 };
