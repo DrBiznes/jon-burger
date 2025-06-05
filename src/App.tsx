@@ -1,10 +1,12 @@
-import ExplodingBurger from './components/ExplodingBurger/ExplodingBurger';
+import HeroSection from './components/HeroSection';
+import FloatingDock from './components/FloatingDock';
 
 function App() {
   return (
-    <>
-      <ExplodingBurger />
-    </>
+    <div className="min-h-screen flex flex-col">
+      <HeroSection />
+      <FloatingDock />
+    </div>
   );
 }
 
