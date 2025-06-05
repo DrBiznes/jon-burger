@@ -1,16 +1,5 @@
 import * as THREE from 'three';
-import type { BurgerPartData } from './TopBun'; // This will be a circular dependency if type is in same file.
-                                                // Let's assume BurgerPartData is defined elsewhere or we inline it.
-                                                // For this example, I'll assume it's imported correctly.
-
-// If BurgerPartData is only in this file, it should be:
-// export interface BurgerPartData {
-//   name: string;
-//   createMesh: () => THREE.Group;
-//   originalY: number;
-//   explodedY: number;
-//   rotationSpeed: number;
-// }
+import type { BurgerPartData } from '../types';
 
 const BUN_RADIUS = 1.5;
 const TOP_BUN_HEIGHT = 0.7; // Tunable height for the top bun dome
@@ -35,9 +24,9 @@ export const TopBun: BurgerPartData = {
 
     const topBunGeometry = new THREE.LatheGeometry(topBunPoints, LATHE_SEGMENTS);
     const topBunMaterial = new THREE.MeshPhongMaterial({
-      color: 0x8B4513,  // Saddle brown
-      shininess: 25,
-      specular: 0x111111
+      color: 0xC4844C,  // Lighter brown color
+      shininess: 30,     // Increased shininess
+      specular: 0x333333 // Brighter specular highlights
     });
     const topBunMesh = new THREE.Mesh(topBunGeometry, topBunMaterial);
     topBunMesh.castShadow = true;
@@ -48,8 +37,9 @@ export const TopBun: BurgerPartData = {
     const seedCount = 50; // Increased for better coverage
     const seedGeometry = new THREE.SphereGeometry(0.035, 5, 3); // Slightly smaller seeds
     const seedMaterial = new THREE.MeshPhongMaterial({
-      color: 0xfff8dc, // Creamy white
-      shininess: 15
+      color: 0xFFFAE6, // Slightly warmer white for seeds
+      shininess: 20,
+      specular: 0x222222
     });
 
     // Create a spline from the dome part of the profile for seed placement

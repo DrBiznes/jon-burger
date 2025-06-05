@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { BurgerPartData } from './TopBun'; // CHANGE: Add 'type'
+import type { BurgerPartData } from '../types';
 
 export const Tomato: BurgerPartData = {
   name: "Tomato Slice",

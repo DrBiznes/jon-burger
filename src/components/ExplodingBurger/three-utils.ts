@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { TopBun, type BurgerPartData } from './burger-parts/TopBun';
+import type { BurgerPartData } from './types';
+import { TopBun } from './burger-parts/TopBun';
 import { JonSauce } from './burger-parts/JonSauce';
 import { Lettuce } from './burger-parts/Lettuce';
 import { RedOnion } from './burger-parts/RedOnion';

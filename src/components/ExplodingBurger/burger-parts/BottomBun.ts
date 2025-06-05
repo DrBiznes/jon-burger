@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { BurgerPartData } from './TopBun'; // Assuming BurgerPartData is correctly accessible
+import type { BurgerPartData } from '../types';
 
 const BUN_RADIUS = 1.5;
 const BOTTOM_BUN_HEIGHT = 0.45; // Tunable height for the bottom bun
@@ -25,9 +25,9 @@ export const BottomBun: BurgerPartData = {
 
     const bottomBunGeometry = new THREE.LatheGeometry(bottomBunPoints, LATHE_SEGMENTS);
     const bottomBunMaterial = new THREE.MeshPhongMaterial({
-      color: 0x8B4513, // Saddle brown - same as top bun
-      shininess: 25,
-      specular: 0x111111
+      color: 0xC4844C, // Lighter brown color matching top bun
+      shininess: 30,   // Increased shininess
+      specular: 0x333333, // Brighter specular highlights
     });
 
     const bottomBunMesh = new THREE.Mesh(bottomBunGeometry, bottomBunMaterial);
