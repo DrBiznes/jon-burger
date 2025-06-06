@@ -1,124 +1,84 @@
 import * as THREE from 'three';
 import type { BurgerPartData } from '../types';
 
+// Constants for the patty shape
+const PATTY_RADIUS = 1.3;
+const PATTY_HEIGHT = 0.4;
+const LATHE_SEGMENTS = 32;
+
+// Function to create a procedural bump texture for the patty surface.
+// This adds realistic, non-uniform texture without extra geometry.
+const createPattyTexture = () => {
+  const size = 128;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const context = canvas.getContext('2d');
+  
+  if (!context) {
+    console.error("Could not get 2d context for patty texture");
+    return null;
+  }
+
+  // Fill with a mid-gray for the bump map (0.5 means no bump)
+  context.fillStyle = 'rgb(128, 128, 128)';
+  context.fillRect(0, 0, size, size);
+
+  // Add random lighter/darker spots for texture
+  for (let i = 0; i < 2000; i++) {
+    const x = Math.random() * size;
+    const y = Math.random() * size;
+    const radius = Math.random() * 1.5;
+    // Lighter spots (bumps out) or darker spots (dents in)
+    const color = Math.random() > 0.5 ? 'rgb(160, 160, 160)' : 'rgb(100, 100, 100)';
+    context.fillStyle = color;
+    context.beginPath();
+    context.arc(x, y, radius, 0, Math.PI * 2);
+    context.fill();
+  }
+
+  return new THREE.CanvasTexture(canvas);
+}
+
+
 export const Patty: BurgerPartData = {
   name: "Beef Patty",
   createMesh: () => {
     const pattyGroup = new THREE.Group();
 
-    // Create a more realistic patty with beveled edges
-    const pattyShape = new THREE.Shape();
-    const radius = 1.2;
-    const irregularity = 0.08;
-    const points = 32;
+    // Define the 2D profile for the patty using a lathe, for a rounded, "cooked" look.
+    // This profile is for half the patty, to be revolved around the Y-axis.
+    const pattyProfile = [
+      new THREE.Vector2(0, -PATTY_HEIGHT / 2),                   // Center bottom
+      new THREE.Vector2(PATTY_RADIUS * 0.8, -PATTY_HEIGHT / 2),  // Edge of flat bottom
+      new THREE.Vector2(PATTY_RADIUS, -PATTY_HEIGHT / 4),        // Mid-side, curving outwards
+      new THREE.Vector2(PATTY_RADIUS * 0.95, PATTY_HEIGHT / 3),  // Upper-side, curving inwards
+      new THREE.Vector2(0, PATTY_HEIGHT / 2)                     // Center top (creating a slight dome)
+    ];
 
-    // Create an irregular circular shape
-    for (let i = 0; i <= points; i++) {
-      const angle = (i / points) * Math.PI * 2;
-      const variation = 1 + (Math.sin(angle * 4) * irregularity + Math.cos(angle * 7) * irregularity * 0.5);
-      const x = Math.cos(angle) * radius * variation;
-      const y = Math.sin(angle) * radius * variation;
-      
-      if (i === 0) {
-        pattyShape.moveTo(x, y);
-      } else {
-        pattyShape.lineTo(x, y);
-      }
-    }
-
-    // Extrude with beveling for realistic edges
-    const extrudeSettings = {
-      depth: 0.35,
-      bevelEnabled: true,
-      bevelThickness: 0.05,
-      bevelSize: 0.08,
-      bevelSegments: 3,
-      curveSegments: 32
-    };
-
-    const pattyGeometry = new THREE.ExtrudeGeometry(pattyShape, extrudeSettings);
+    const pattyGeometry = new THREE.LatheGeometry(pattyProfile, LATHE_SEGMENTS);
     
-    // Center the geometry
-    pattyGeometry.center();
+    // Create a procedural bump map for a more organic surface
+    const bumpTexture = createPattyTexture();
     
-    // Rotate to lie flat
-    pattyGeometry.rotateX(-Math.PI / 2);
-
     const pattyMaterial = new THREE.MeshPhongMaterial({
-      color: 0x6B4423,  // Rich brown color
-      shininess: 15,
-      specular: 0x222222,
-      emissive: 0x3E2723,
-      emissiveIntensity: 0.2
+      color: 0x6B4423,      // Rich, dark brown for a cooked look
+      shininess: 10,         // Low shininess for a meaty texture
+      specular: 0x111111,   // Dark specular highlights
+      bumpMap: bumpTexture,
+      bumpScale: 0.015,      // Adjust for desired bumpiness
     });
 
     const patty = new THREE.Mesh(pattyGeometry, pattyMaterial);
-
-    // Add char marks (darker spots)
-    const charMarkCount = 8;
-    for (let i = 0; i < charMarkCount; i++) {
-      const charGeometry = new THREE.SphereGeometry(0.12 + Math.random() * 0.06, 8, 6);
-      const charMaterial = new THREE.MeshPhongMaterial({
-        color: 0x3E2723,
-        emissive: 0x1A0E0A,
-        emissiveIntensity: 0.3
-      });
-      const charMark = new THREE.Mesh(charGeometry, charMaterial);
-
-      const angle = (i / charMarkCount) * Math.PI * 2 + Math.random() * 0.3;
-      const radius = 0.2 + Math.random() * 0.6;
-      charMark.position.x = Math.cos(angle) * radius;
-      charMark.position.z = Math.sin(angle) * radius;
-      charMark.position.y = 0.18 + Math.random() * 0.02;
-      charMark.scale.y = 0.2;
-      charMark.scale.x = 1 + Math.random() * 0.4;
-      charMark.scale.z = 1 + Math.random() * 0.4;
-      charMark.rotation.y = Math.random() * Math.PI;
-
-      patty.add(charMark);
-    }
-
-    // Add grill marks - cleaner and more visible
-    const grillMarkGeometry = new THREE.BoxGeometry(2.2, 0.02, 0.06);
-    const grillMarkMaterial = new THREE.MeshPhongMaterial({
-      color: 0x2E1A0E,
-      emissive: 0x1A0E0A,
-      emissiveIntensity: 0.2
-    });
-
-    for (let i = -3; i <= 3; i++) {
-      const grillMark = new THREE.Mesh(grillMarkGeometry, grillMarkMaterial);
-      grillMark.position.set(0, 0.176, i * 0.18);
-      grillMark.rotation.y = Math.PI / 5;
-      patty.add(grillMark);
-    }
-
-    // Add juicy highlights on the surface
-    const highlightCount = 5;
-    for (let i = 0; i < highlightCount; i++) {
-      const highlightGeometry = new THREE.SphereGeometry(0.06, 6, 4);
-      const highlightMaterial = new THREE.MeshPhongMaterial({
-        color: 0x8B6239,
-        shininess: 100,
-        specular: 0xFFFFFF,
-        transparent: true,
-        opacity: 0.8
-      });
-      const highlight = new THREE.Mesh(highlightGeometry, highlightMaterial);
-
-      const angle = Math.random() * Math.PI * 2;
-      const radius = Math.random() * 0.7;
-      highlight.position.x = Math.cos(angle) * radius;
-      highlight.position.z = Math.sin(angle) * radius;
-      highlight.position.y = 0.15 + Math.random() * 0.05;
-      highlight.scale.y = 0.4;
-
-      patty.add(highlight);
-    }
+    
+    // The geometry is created around the Y-axis, so it's already centered horizontally
+    // and vertically, ready to be placed.
 
     patty.castShadow = true;
     patty.receiveShadow = true;
+    
     pattyGroup.add(patty);
+    
     return pattyGroup;
   },
   originalY: -0.15,

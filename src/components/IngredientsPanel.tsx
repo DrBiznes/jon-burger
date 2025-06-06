@@ -33,24 +33,23 @@ const IngredientsPanel: React.FC = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-20 transition-all duration-300">
-      {/* Neo-brutalist ingredients panel */}
-      <div className="bg-white border-4 border-black shadow-[8px_8px_0px_#000000] p-6 w-80">
+    <div className="fixed right-8 top-1/3 mt-8 transform -translate-y-1/2 z-20 transition-all duration-300">
+      {/* Ultra minimalist panel */}
+      <div className="bg-white/95 backdrop-blur-sm border border-gray-200 p-8 w-72 shadow-sm">
         {/* Header */}
-        <div className="border-b-4 border-black pb-3 mb-4">
-          <h2 className="font-['Cherry_Bomb_One'] text-2xl text-black tracking-tight">
-            INGREDIENTS
+        <div className="mb-6">
+          <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-gray-400 mb-1">
+            Ingredients
           </h2>
-          <div className="bg-red-500 h-2 w-16 mt-2"></div>
+          <div className="w-8 h-px bg-gray-300"></div>
         </div>
 
         {/* Ingredients list */}
-        <ul className="space-y-3">
+        <ul className="space-y-2">
           {ingredients.map((ingredient, index) => (
-            <li key={index} className="flex items-center">
-              {/* Bold square bullet */}
-              <div className="w-4 h-4 bg-black mr-3 flex-shrink-0"></div>
-              <span className="font-['Cherry_Bomb_One'] text-sm text-black">
+            <li key={index} className="flex items-start">
+              <span className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+              <span className="font-mono text-xs text-gray-600 leading-relaxed">
                 {ingredient}
               </span>
             </li>
@@ -58,17 +57,11 @@ const IngredientsPanel: React.FC = () => {
         </ul>
 
         {/* Footer */}
-        <div className="border-t-4 border-black pt-3 mt-4">
-          <p className="font-['Cherry_Bomb_One'] text-xs text-black text-center">
-            100% FRESH • NO PRESERVATIVES
+        <div className="mt-6 pt-4 border-t border-gray-200">
+          <p className="font-mono text-[10px] text-gray-400 text-center tracking-wider">
+            100% FRESH
           </p>
         </div>
-
-        {/* Decorative corner elements */}
-        <div className="absolute -top-2 -left-2 w-6 h-6 bg-yellow-400 border-2 border-black"></div>
-        <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 border-2 border-black"></div>
-        <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-blue-500 border-2 border-black"></div>
-        <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-green-500 border-2 border-black"></div>
       </div>
     </div>
   );

@@ -49,22 +49,7 @@ export const Pickles: BurgerPartData = {
       pickle.rotation.z = Math.random() * Math.PI / 6 - Math.PI / 12;
 
       // Add some darker spots for realism
-      const spotCount = 3;
-      for (let k = 0; k < spotCount; k++) {
-        const spotGeometry = new THREE.CircleGeometry(0.04, 8);
-        const spotMaterial = new THREE.MeshPhongMaterial({
-          color: 0x556B2F,
-          side: THREE.DoubleSide
-        });
-        const spot = new THREE.Mesh(spotGeometry, spotMaterial);
-        const spotAngle = Math.random() * Math.PI * 2;
-        const spotRadius = Math.random() * 0.2 + 0.1;
-        spot.position.x = Math.cos(spotAngle) * spotRadius;
-        spot.position.z = Math.sin(spotAngle) * spotRadius;
-        spot.position.y = 0.031;
-        pickle.add(spot);
-      }
-
+    
       pickle.castShadow = true;
       pickle.receiveShadow = true;
       picklesGroup.add(pickle);
