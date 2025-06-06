@@ -1,5 +1,6 @@
 import React from 'react';
 import ExplodingBurger from './ExplodingBurger/ExplodingBurger';
+import NextPopup from './NextPopup';
 import Star16 from './stars/s16';
 
 const HeroSection: React.FC = () => {
@@ -31,6 +32,9 @@ const HeroSection: React.FC = () => {
               COMPANY
             </span>
           </h1>
+          
+          {/* Next Popup component positioned below logo */}
+          <NextPopup />
         </div>
       </div>
 

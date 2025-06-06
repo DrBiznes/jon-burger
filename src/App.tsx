@@ -2,13 +2,11 @@ import HeroSection from './components/HeroSection';
 import FloatingDock from './components/FloatingDock';
 import PhotoGallery from './components/PhotoGallery';
 import IngredientsPanel from './components/IngredientsPanel';
-import AnnouncementsCountdown from './components/AnnouncementsCountdown';
 
 function App() {
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900"> 
       <HeroSection />
-      <AnnouncementsCountdown />
       <IngredientsPanel />
       
       {/* Content that appears after hero section */}
