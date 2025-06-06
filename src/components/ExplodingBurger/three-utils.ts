@@ -22,7 +22,6 @@ interface ThreeBurgerSetup {
   components: BurgerComponent[];
   animateBurger: (toExploded: boolean, immediate?: boolean) => void;
   cleanup: () => void;
-  setMouseDragState: (isDragging: boolean) => void;
 }
 
 const MAX_TILT_X = Math.PI / 8; 
@@ -288,9 +287,5 @@ export function setupThreeScene(
     scene.clear();
   };
 
-  const setMouseDragState = (isDraggingValue: boolean) => {
-    isMouseDraggingRef.current = isDraggingValue;
-  };
-
-  return { scene, camera, renderer, burgerGroup, components, animateBurger, cleanup, setMouseDragState };
+  return { scene, camera, renderer, burgerGroup, components, animateBurger, cleanup };
 }

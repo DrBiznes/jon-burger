@@ -1,13 +1,21 @@
 import HeroSection from './components/HeroSection';
 import FloatingDock from './components/FloatingDock';
 import PhotoGallery from './components/PhotoGallery';
+import IngredientsPanel from './components/IngredientsPanel';
+import AnnouncementsCountdown from './components/AnnouncementsCountdown';
 
 function App() {
   return (
-    // Ensure main app bg is set if not relying on body's checkerboard for full coverage
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900"> 
       <HeroSection />
-      <PhotoGallery />
+      <AnnouncementsCountdown />
+      <IngredientsPanel />
+      
+      {/* Content that appears after hero section */}
+      <div className="relative z-30 bg-[#FFFDF7] dark:bg-gray-900">
+        <PhotoGallery />
+      </div>
+      
       <FloatingDock />
     </div>
   );
