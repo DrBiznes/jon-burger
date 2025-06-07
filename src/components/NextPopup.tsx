@@ -5,12 +5,12 @@ import React, { useState, useEffect } from 'react';
 // ==================================================
 
 // Change this message to update what shows
-const POPUP_MESSAGE = "Next Pop-Up Soon";
+const POPUP_MESSAGE = "See you next year!";
 
 // Set the next popup date here (Year, Month-1, Day, Hour, Minute)
 // Note: Month is 0-indexed (January = 0, February = 1, etc.)
 // Example: new Date(2025, 5, 15, 12, 0) = June 15, 2025 at 12:00 PM
-const NEXT_POPUP_DATE = new Date(2025, 5, 15, 12, 0);
+const NEXT_POPUP_DATE = new Date(2025, 8, 29, 12, 0);
 
 // ==================================================
 
@@ -43,7 +43,7 @@ const NextPopup: React.FC = () => {
   return (
     <div className="text-center mt-6">
       {/* Simple message */}
-      <p className="font-['Cherry_Bomb_One'] text-sm text-gray-700 dark:text-gray-300 mb-2">
+      <p className="font-['Cherry_Bomb_One'] text-sm text-white dark:text-gray-300 mb-2">
         {POPUP_MESSAGE}
       </p>
       

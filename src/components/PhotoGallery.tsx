@@ -15,7 +15,7 @@ const PhotoGallery: React.FC = () => {
     <section className="py-16 sm:py-24 bg-gray-100 dark:bg-gray-800 font-sans">
       <div className="container mx-auto px-4">
         <h2 className="font-display text-5xl sm:text-6xl text-center mb-12 sm:mb-16 text-gray-800 dark:text-white">
-          From Our Pop-Ups!
+          JON BURGERS!!!
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           {photos.map((photo, index) => (

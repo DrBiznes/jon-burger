@@ -5,7 +5,7 @@ import Star16 from './stars/s16';
 
 const HeroSection: React.FC = () => {
   return (
-    <main className="relative h-[200vh] flex flex-col items-center px-4 pt-12 overflow-hidden bg-[#FFFDF7] dark:bg-gray-900">
+    <main className="relative h-[200vh] flex flex-col items-center px-4 pt-12 overflow-hidden">
       {/* Logo Section - Normal positioning */}
       <div className="relative flex flex-col items-center mt-14 mb-24 z-20">
         {/* Star background */}
@@ -22,15 +22,15 @@ const HeroSection: React.FC = () => {
         
         {/* Text content */}
         <div className="relative z-10 text-center">
-          <p className="font-['Luckiest_Guy'] text-2xl text-primary mb-4 tracking-wider transform -rotate-3">
-            ALWAYS FRESH
-          </p>
           <h1 className="font-['Sarina'] text-7xl sm:text-8xl md:text-8xl text-primary tracking-wide drop-shadow-md transform rotate-2">
-            <span className="block leading-none hover:scale-105 transition-transform">JON</span>
-            <span className="block leading-none hover:scale-105 transition-transform">BURGER</span>
+            <span className="block leading-none hover:scale-105 transition-transform text-white">JON</span>
+            <span className="block leading-none hover:scale-105 transition-transform text-white">BURGER</span>
             <span className="block leading-tight text-4xl sm:text-5xl md:text-6xl tracking-widest text-chart-1 -rotate-3">
               COMPANY
             </span>
+            <p className="font-['Cherry_Bomb_One'] text-2xl text-primary mb-3 tracking-wider transform -rotate-3">
+            EST. 2025, Eugene OR
+          </p>
           </h1>
           
           {/* Next Popup component positioned below logo */}

@@ -27,6 +27,27 @@ interface ThreeBurgerSetup {
 const MAX_TILT_X = Math.PI / 8; 
 const MIN_TILT_X = -Math.PI / 12; 
 
+// Function to get the current background color from CSS
+function getCSSBackgroundColor(): THREE.Color {
+  // Get the computed background color from the body
+  const bodyStyle = window.getComputedStyle(document.body);
+  const bgColor = bodyStyle.backgroundColor;
+  
+  // Parse RGB values from the CSS color
+  if (bgColor.startsWith('rgb')) {
+    const rgbMatch = bgColor.match(/\d+/g);
+    if (rgbMatch && rgbMatch.length >= 3) {
+      const r = parseInt(rgbMatch[0]) / 255;
+      const g = parseInt(rgbMatch[1]) / 255;
+      const b = parseInt(rgbMatch[2]) / 255;
+      return new THREE.Color(r, g, b);
+    }
+  }
+  
+  // Fallback to white if parsing fails
+  return new THREE.Color(0xffffff);
+}
+
 export function setupThreeScene(
   mountElement: HTMLDivElement,
   isExplodedState: React.MutableRefObject<boolean>,
@@ -34,7 +55,21 @@ export function setupThreeScene(
   isMouseDraggingRef: React.MutableRefObject<boolean>
 ): ThreeBurgerSetup {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xffffff);
+  
+  // Use CSS background color instead of hardcoded white
+  scene.background = getCSSBackgroundColor();
+  
+  // Set up a mutation observer to watch for background color changes
+  const updateBackgroundColor = () => {
+    scene.background = getCSSBackgroundColor();
+  };
+  
+  // Watch for class changes on the html element (for dark mode toggling)
+  const observer = new MutationObserver(updateBackgroundColor);
+  observer.observe(document.documentElement, { 
+    attributes: true, 
+    attributeFilter: ['class'] 
+  });
 
   const camera = new THREE.PerspectiveCamera(50, mountElement.clientWidth / mountElement.clientHeight, 0.1, 1000);
   camera.position.set(0, 2, 11);
@@ -263,6 +298,7 @@ export function setupThreeScene(
 
   const cleanup = () => {
     cancelAnimationFrame(animationFrameId);
+    observer.disconnect(); // Clean up the mutation observer
     window.removeEventListener('resize', handleResize);
     mountElement.removeEventListener('mousedown', onMouseDown);
     mountElement.removeEventListener('mousemove', onMouseMove);

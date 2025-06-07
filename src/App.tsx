@@ -5,12 +5,12 @@ import IngredientsPanel from './components/IngredientsPanel';
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900"> 
+    <div className="min-h-screen flex flex-col"> 
       <HeroSection />
       <IngredientsPanel />
       
       {/* Content that appears after hero section */}
-      <div className="relative z-30 bg-[#FFFDF7] dark:bg-gray-900">
+      <div className="relative z-30">
         <PhotoGallery />
       </div>
       

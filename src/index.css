@@ -119,9 +119,11 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-color: #FFFDF7;
+    /* Change this color to whatever you want */
+    background-color: #2b5fbb; /* Example: coral/salmon color */
   }
   .dark body {
-    background-color: rgb(17, 24, 39); /* dark:bg-gray-900 equivalent */
+    /* Change this for dark mode */
+    background-color: #2D1B69; /* Example: dark purple */
   }
 }
